@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Vote{% endblock %}
 {% block content %}
+<form action="/vote" method="post">
 <div class="item">
   <div class="banner-tight" id="previous-header">
     <h1>Previous</h1>
@@ -20,15 +21,17 @@
     {% with item=next %}
     {% include "_item.html" %}
     {% endwith %}
+    {% with item=next %}
+    {% include "_feedback.html" %}
+    {% endwith %}
   </div>
 </div>
 
 <div class="item">
   <div class="banner" id="vote-header">
-    <h1>Vote</h1>
+    <h1>Vote - {{ settings.CATEGORY }}</h1>
   </div>
   <div class="info">
-    <form action="/vote" method="post">
       <p class="center">Which one is better?</p>
       <input type="submit" name="action" value="Previous" id="vote-previous" class="button-left">
       <input type="submit" name="action" value="Current" id="vote-current" class="button-right">
@@ -36,7 +39,7 @@
       <input type="hidden" name="prev_id" value="{{ prev.id }}">
       <input type="hidden" name="next_id" value="{{ next.id }}">
       <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-    </form>
   </div>
 </div>
+</form>
 {% endblock %}

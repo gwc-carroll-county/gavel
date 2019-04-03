@@ -82,6 +82,30 @@
           </ul>
         </td>
       </tr>
+      <tr>
+        <th>Strengths</th>
+        <td>
+          <ul>
+            {% for feedback in feedbacks %}
+            {% if feedback.feedback_type == 'strengths' %}
+            <li>{{ feedback.feedback | safe }}</li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Feedback</th>
+        <td>
+          <ul>
+            {% for feedback in feedbacks %}
+            {% if feedback.feedback_type == 'feedback' %}
+            <li>{{ feedback.feedback | safe }}</li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
     </table>
   </div>
 </div>

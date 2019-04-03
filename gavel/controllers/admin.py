@@ -189,11 +189,13 @@ def item_detail(item_id):
             )
         else:
             skipped = Annotator.query.filter(Annotator.ignore.contains(item))
+        feedbacks = Feedback.query.filter(Feedback.item == item).all()
         return render_template(
             'admin_item.html',
             item=item,
             assigned=assigned,
-            skipped=skipped
+            skipped=skipped,
+            feedbacks=feedbacks
         )
 
 @app.route('/admin/annotator/<annotator_id>/')

@@ -67,9 +67,9 @@ def index():
                 content=utils.render_markdown(settings.WAIT_MESSAGE)
             )
         elif annotator.prev is None:
-            return render_template('begin.html', item=annotator.next)
+            return render_template('begin.html', item=annotator.next, settings=settings)
         else:
-            return render_template('vote.html', prev=annotator.prev, next=annotator.next)
+            return render_template('vote.html', prev=annotator.prev, next=annotator.next, settings=settings)
 
 @app.route('/vote', methods=['POST'])
 @requires_open(redirect_to='index')
@@ -89,6 +89,12 @@ def vote():
                     perform_vote(annotator, next_won=True)
                     decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
                 db.session.add(decision)
+                if request.form['strengths-' + str(annotator.next.id)]:
+                    strengths = Feedback(annotator, item=annotator.next, feedback_type='strengths', feedback=request.form['strengths-' + str(annotator.next.id)])
+                    db.session.add(strengths)
+                if request.form['feedback-' + str(annotator.next.id)]:
+                    feedback = Feedback(annotator, item=annotator.next, feedback_type='feedback', feedback=request.form['feedback-' + str(annotator.next.id)])
+                    db.session.add(feedback)
             annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
             annotator.prev = annotator.next
             annotator.ignore.append(annotator.prev)
@@ -104,6 +110,12 @@ def begin():
     if annotator.next.id == int(request.form['item_id']):
         annotator.ignore.append(annotator.next)
         if request.form['action'] == 'Done':
+            if request.form['strengths-' + str(annotator.next.id)]:
+                strengths = Feedback(annotator, item=annotator.next, feedback_type='strengths', feedback=request.form['strengths-' + str(annotator.next.id)])
+                db.session.add(strengths)
+            if request.form['feedback-' + str(annotator.next.id)]:
+                feedback = Feedback(annotator, item=annotator.next, feedback_type='feedback', feedback=request.form['feedback-' + str(annotator.next.id)])
+                db.session.add(feedback)
             annotator.next.viewed.append(annotator)
             annotator.prev = annotator.next
             annotator.update_next(choose_next(annotator))
