@@ -46,6 +46,7 @@ def admin():
         items=items,
         votes=len(decisions),
         setting_closed=setting_closed,
+        category=settings.CATEGORY
     )
 
 @app.route('/admin/item', methods=['POST'])
